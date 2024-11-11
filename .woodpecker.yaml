@@ -1,8 +1,17 @@
 when:
   - event: push
     branch: master
-
+  
 steps:
+  - name: check
+    image: fish
+    environment:
+      CARGO_INCREMENTAL: false
+      CARGO_REGISTRIES_FORGEJO_INDEX:
+        from_secret: cargo_registries_forgejo_index
+    commands:
+      - cargo check
+  
   - name: publish
     image: fish
     environment:
