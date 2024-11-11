@@ -1,19 +1,22 @@
-use colored::{Color::*, Colorize};
-use ovpn_status::*;
+use colored::{
+    Color::{Green, Red},
+    Colorize,
+};
+use ovpn_status::{APIResponse, ServerInfo, StatusResponse};
 use reqwest::blocking;
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let client = blocking::Client::new();
 
-    let slugs: Vec<String> = client
+    let slugs = client
         .get("https://www.ovpn.com/v2/api/client/entry")
         .send()?
         .json::<APIResponse>()?
         .datacenters
         .into_iter()
         .map(|dc| dc.slug)
-        .collect();
+        .collect::<Vec<String>>();
 
     let mut servers: Vec<(String, ServerInfo)> = vec![];
 
