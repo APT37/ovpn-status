@@ -28,3 +28,4 @@ steps:
         from_secret: cargo_registries_forgejo_token
     commands:
       - cargo publish --registry forgejo
+    failure: ignore
