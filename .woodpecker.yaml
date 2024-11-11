@@ -3,6 +3,12 @@ when:
     branch: master
   
 steps:
+  
+  - name: install-toolchain
+    image: fish
+    commands:
+      - rustup toolchain install stable --profile minimal
+
   - name: check
     image: fish
     environment:
