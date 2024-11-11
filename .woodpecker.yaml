@@ -1,0 +1,15 @@
+when:
+  - event: push
+    branch: master
+
+steps:
+  - name: publish
+    image: fish
+    environment:
+      CARGO_INCREMENTAL: false
+      CARGO_REGISTRIES_FORGEJO_INDEX:
+        from_secret: cargo_registries_forgejo_index
+      CARGO_REGISTRIES_FORGEJO_TOKEN:
+        from_secret: cargo_registries_forgejo_token
+    commands:
+      - cargo publish --registry forgejo
