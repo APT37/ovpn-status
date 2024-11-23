@@ -1,8 +1,11 @@
 [package]
-edition = "2021"
 name = "ovpn_status"
 version = "0.2.8"
+edition = "2021"
+description = "Queries the endpoints used by OVPN's status site and show's status information in the terminal."
+readme = "README.md"
 license = "MIT"
+keywords = ["ovpn", "terminal", "vpn", "status", "api"]
 
 [profile.dev]
 opt-level = 0
