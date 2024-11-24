@@ -3,11 +3,9 @@ use colored::{
     Colorize,
 };
 use ovpn_status::{APIResponse, ServerInfo, StatusResponse};
-use reqwest::blocking;
-use std::error::Error;
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let client = blocking::Client::new();
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = reqwest::blocking::Client::new();
 
     let slugs = client
         .get("https://www.ovpn.com/v2/api/client/entry")
