@@ -2,7 +2,7 @@
 name = "ovpn_status"
 version = "0.2.9"
 edition = "2021"
-description = "Queries the endpoints used by OVPN's status site and shows status information in the terminal."
+description = "Queries the endpoints used by OVPN's status site and shows status information in the terminal"
 readme = "README.md"
 license = "MIT"
 keywords = ["ovpn", "terminal", "vpn", "status", "api"]
@@ -32,6 +32,12 @@ codegen-units = 16
 rpath = false
 
 [dependencies]
-colored = "2.1.0"
-reqwest = { version = "0.12.9", default-features = false, features = ["blocking", "cookies", "http2", "json", "rustls-tls"] }
-serde = { version = "1.0.215", features = ["derive"] }
+colored = "2.2.*"
+reqwest = { version = "0.12.*", default-features = false, features = [
+    "blocking",
+    "cookies",
+    "http2",
+    "json",
+    "rustls-tls",
+] }
+serde = { version = "1.0.*", features = ["derive"] }

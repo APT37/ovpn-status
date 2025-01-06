@@ -35,3 +35,26 @@ steps:
 #    commands:
 #      - cargo publish
 #    failure: ignore
+
+  - name: build pkg
+    image: fish
+    commands:
+      - makepkg --nodeps
+
+  - name: move pkg
+    image: fish
+    environment:
+      ARCH_REPO_DIR:
+        from_secret: arch_repo_dir
+    commands:
+      - mv (makepkg --packagelist) $ARCH_REPO_DIR
+
+  - name: add pkg
+    image: fish
+    environment:
+      ARCH_REPO_DIR:
+        from_secret: arch_repo_dir
+      ARCH_REPO_NAME:
+        from_secret: arch_repo_name
+    commands:
+      - for pkg in (makepkg --packagelist); repo-add $ARCH_REPO_DIR/$ARCH_REPO_NAME.db.tar.zst $ARCH_REPO_DIR/(string split -r -m 1 '/' $pkg | tail -1); end
