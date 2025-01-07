@@ -26,16 +26,6 @@ steps:
       - cargo publish --registry forgejo
     failure: ignore
 
-#  - name: publish (crates.io)
-#    image: fish
-#    environment:
-#      CARGO_INCREMENTAL: false
-#      CARGO_REGISTRY_TOKEN:
-#        from_secret: cargo_registry_token
-#    commands:
-#      - cargo publish
-#    failure: ignore
-
   - name: PKGBUILD
     image: fish
     environment:
