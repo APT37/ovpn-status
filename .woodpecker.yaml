@@ -15,17 +15,6 @@ steps:
     commands:
       - cargo build --release
 
-  - name: publish (forgejo)
-    image: fish
-    environment:
-      CARGO_REGISTRIES_FORGEJO_INDEX:
-        from_secret: cargo_registries_forgejo_index
-      CARGO_REGISTRIES_FORGEJO_TOKEN:
-        from_secret: cargo_registries_forgejo_token
-    commands:
-      - cargo publish --registry forgejo
-    failure: ignore
-
   - name: PKGBUILD
     image: fish
     environment:
