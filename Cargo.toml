@@ -1,6 +1,6 @@
 [package]
 name = "ovpn_status"
-version = "0.2.9"
+version = "0.3.0"
 edition = "2021"
 description = "Queries the endpoints used by OVPN's status site and shows status information in the terminal"
 readme = "README.md"
@@ -31,8 +31,12 @@ incremental = true
 codegen-units = 16
 rpath = false
 
+[[bin]]
+name = "ovpn_status"
+path = "ovpn_status.rs"
+
 [dependencies]
-colored = "2.2.*"
+colored = "3.0.*"
 reqwest = { version = "0.12.*", default-features = false, features = [
     "blocking",
     "cookies",

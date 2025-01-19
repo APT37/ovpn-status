@@ -1,13 +1,10 @@
-pkgname=ovpn_status
-pkgver=0.2.9
+pkgname=ovpn-status
+pkgver=0.3.0
 pkgrel=1
-pkgdesc="Queries the endpoints used by OVPN's status site and shows status information in the terminal"
+pkgdesc="Queries the endpoints used by OVPN's status site and shows all servers' status in the terminal"
 arch=('any')
-url="https://git.nospy.in/Rust/$pkgname"
-depends=()
-source=()
-sha256sums=()
+url="https://git.nospy.in/Rust/ovpn_status"
 
 package() {
-  install -Dm755 "$startdir/target/release/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm755 "$startdir/target/release/ovpn_status" "$pkgdir/usr/bin/$pkgname"
   }
