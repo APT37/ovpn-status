@@ -3,7 +3,7 @@ pkgver=0.3.0
 pkgrel=2
 pkgdesc="Queries the endpoints used by OVPN's status site and shows all servers' status in the terminal"
 arch=('any')
-url="https://git.nospy.in/Rust/ovpn-status"
+url="https://git.nospy.in/Rust/$pkgname"
 
 package() {
   install -Dm755 "$startdir/target/release/ovpn_status" "$pkgdir/usr/bin/$pkgname"
