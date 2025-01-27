@@ -28,7 +28,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .json::<StatusResponse>()?
             .data
             .into_iter()
-            .for_each(|server| servers.push((slug.to_uppercase(), server)));
+            .for_each(|server| {
+                servers.push((
+                    format!("{}{}", slug[..1].to_uppercase(), &slug[1..]),
+                    server,
+                ))
+            });
     }
 
     let mut previous_city = String::new();
