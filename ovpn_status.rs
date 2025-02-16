@@ -33,7 +33,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 servers.push((
                     format!("{}{}", slug[..1].to_uppercase(), &slug[1..]),
                     server,
-                ))
+                ));
             });
     }
 

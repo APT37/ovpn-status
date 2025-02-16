@@ -1,6 +1,6 @@
 pkgname=ovpn-status
 pkgver=0.3.1
-pkgrel=3
+pkgrel=4
 pkgdesc='Queries the endpoints used by OVPN's status site and shows all servers' status in the terminal'
 arch=('x86_64')
 url="https://git.nospy.in/Rust/$pkgname"
