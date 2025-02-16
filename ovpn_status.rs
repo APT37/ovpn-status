@@ -2,11 +2,12 @@ use colored::{
     Color::{Green, Red},
     Colorize,
 };
+use reqwest::blocking::Client;
 use serde::Deserialize;
-use std::net::Ipv4Addr;
+use std::{error::Error, net::Ipv4Addr};
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = reqwest::blocking::Client::new();
+fn main() -> Result<(), Box<dyn Error>> {
+    let client = Client::new();
 
     let slugs = client
         .get("https://www.ovpn.com/v2/api/client/entry")
