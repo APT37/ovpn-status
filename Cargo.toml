@@ -1,6 +1,6 @@
 [package]
 name = "ovpn_status"
-version = "0.3.2"
+version = "0.4.0"
 edition = "2021"
 description = "Show OVPN (provider) server status in the terminal"
 readme = "README.md"
@@ -30,7 +30,7 @@ codegen-units = 16
 rpath = false
 
 [[bin]]
-name = "ovpn_status"
+name = "ovpn-status"
 path = "ovpn_status.rs"
 
 [dependencies]

@@ -1,5 +1,5 @@
 ## OVPN Status
 
-Queries the endpoints used by [OVPN's status site](https://status.ovpn.com/) and displays server status in the terminal.
+Shows [OVPN server status](https://status.ovpn.com/) in the terminal.
 
-![OVPN Status](terminal.png "OPVN Status")
+![OVPN Server Status](terminal.png "OVPN Server Status")
