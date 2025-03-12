@@ -17,7 +17,8 @@ steps:
     environment:
       CARGO_HOME:
         from_secret: cargo_home
-      CARGO_INCREMENTAL: false
+      CARGO_TARGET_DIR:
+        from_secret: cargo_target_dir
     commands:
       - cargo build --release
 
@@ -28,7 +29,10 @@ steps:
         from_secret: arch_repo_dir
       ARCH_REPO_NAME:
         from_secret: arch_repo_name
+      CARGO_TARGET_DIR:
+        from_secret: cargo_target_dir
     commands:
+      - ln -s $CARGO_TARGET_DIR target
       - makepkg --nodeps
       - mv (makepkg --packagelist) $ARCH_REPO_DIR
       - for pkg in (makepkg --packagelist); repo-add $ARCH_REPO_DIR/$ARCH_REPO_NAME.db.tar.zst $ARCH_REPO_DIR/(string split -r -m 1 '/' $pkg | tail -1); end
