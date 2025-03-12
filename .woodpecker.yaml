@@ -7,8 +7,14 @@ skip_clone: true
 steps:
   - name: clone
     image: fish
+    environment:
+      REPOSITORY_DIR:
+        from_secret: repository_dir
     commands:
-      - git clone $CI_REPO_CLONE_SSH_URL .
+      - mkdir -p $REPOSITORY_DIR/$CI_REPO_NAME && cd $REPOSITORY_DIR/$CI_REPO_NAME
+      - git clone $CI_REPO_CLONE_SSH_URL (pwd) || git pull --force
+      - rmdir $CI_WORKSPACE
+      - ln -s $REPOSITORY_DIR/$CI_REPO_NAME $CI_WORKSPACE
 
   - name: toolchain
     image: fish
@@ -26,8 +32,9 @@ steps:
         from_secret: cargo_home
       CARGO_TARGET_DIR:
         from_secret: cargo_target_dir
+      CARGO_LOG: cargo::core::compiler::fingerprint=info
     commands:
-      - cargo build --release
+      - cargo build --release --verbose
 
   - name: PKGBUILD
     image: fish
