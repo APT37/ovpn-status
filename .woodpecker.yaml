@@ -2,7 +2,14 @@ when:
   - event: push
     branch: master
 
-steps:  
+skip_clone: true
+
+steps:
+  - name: clone
+    image: fish
+    commands:
+      - git clone $CI_REPO_CLONE_SSH_URL .
+
   - name: toolchain
     image: fish
     environment:
