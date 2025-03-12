@@ -3,14 +3,20 @@ when:
     branch: master
 
 steps:  
-  - name: install-toolchain
+  - name: toolchain
     image: fish
+    environment:
+      RUST_TOOLCHAIN_PATH:
+        from_secret: rust_toolchain_path
     commands:
-      - rustup toolchain install stable --profile minimal
+      - rustup toolchain link woodpecker $RUST_TOOLCHAIN_PATH
+      - rustup default woodpecker
 
   - name: build
     image: fish
     environment:
+      CARGO_HOME:
+        from_secret: cargo_home
       CARGO_INCREMENTAL: false
     commands:
       - cargo build --release
