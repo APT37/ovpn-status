@@ -1,7 +1,4 @@
-use colored::{
-    Color::{Green, Red},
-    Colorize,
-};
+use colored::{ Color::{ Green, Red }, Colorize };
 use reqwest::blocking::Client;
 use serde::Deserialize;
 use std::error::Error;
@@ -13,8 +10,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .get("https://www.ovpn.com/v2/api/client/entry")
         .send()?
         .json::<APIResponse>()?
-        .datacenters
-        .into_iter()
+        .datacenters.into_iter()
         .map(|dc| dc.slug)
         .collect::<Vec<String>>();
 
@@ -22,13 +18,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     for slug in slugs {
         client
-            .get(format!(
-                "https://status.ovpn.com/datacenters/{slug}/servers"
-            ))
+            .get(format!("https://status.ovpn.com/datacenters/{slug}/servers"))
             .send()?
             .json::<StatusResponse>()?
-            .data
-            .into_iter()
+            .data.into_iter()
             .for_each(|server| {
                 servers.push((slug[..1].to_uppercase() + &slug[1..], server));
             });
@@ -43,10 +36,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             previous_city = city;
         }
 
-        print!(
-            " {}",
-            server.name[3..].color(if server.online { Green } else { Red })
-        );
+        print!(" {}", server.name[3..].color(if server.online { Green } else { Red }));
     }
 
     println!();
