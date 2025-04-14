@@ -9,10 +9,16 @@ fn main() -> Result<(), Box<dyn Error>> {
     let slugs = client
         .get("https://www.ovpn.com/v2/api/client/entry")
         .send()?
-        .json::<APIResponse>()?
+        .json::<Datacenters>()?
         .datacenters.into_iter()
         .map(|dc| dc.slug)
         .collect::<Vec<String>>();
+
+    let width = slugs
+        .iter()
+        .max_by_key(|slug| slug.len())
+        .expect("determine longest slug")
+        .len();
 
     let mut servers = vec![];
 
@@ -22,21 +28,21 @@ fn main() -> Result<(), Box<dyn Error>> {
             .send()?
             .json::<StatusResponse>()?
             .data.into_iter()
-            .for_each(|server| {
-                servers.push((slug[..1].to_uppercase() + &slug[1..], server));
+            .for_each(|si| {
+                servers.push((slug[..1].to_uppercase() + &slug[1..], si));
             });
     }
 
     let mut previous_city = String::new();
 
-    for (city, server) in servers {
+    for (city, si) in servers {
         if city != previous_city {
-            print!("\n{}", format!("{city:<11}:").green());
+            print!("\n{}", format!(" {city:<width$} |").green());
 
             previous_city = city;
         }
 
-        print!(" {}", server.name[3..].color(if server.online { Green } else { Red }));
+        print!(" {}", si.name[3..].color(if si.online { Green } else { Red }));
     }
 
     println!();
@@ -45,7 +51,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 #[derive(Deserialize)]
-struct APIResponse {
+struct Datacenters {
     datacenters: Vec<DataCenter>,
 }
 
