@@ -1,6 +1,6 @@
 pkgname=ovpn-status
 pkgver=0.7.0
-pkgrel=6
+pkgrel=7
 pkgdesc='Show OVPN (provider) server status in the terminal'
 arch=('x86_64')
 url="https://git.nospy.in/Rust/$pkgname"
