@@ -1,5 +1,5 @@
 ## OVPN Status
 
-Shows [OVPN server status](https://status.ovpn.com/) in the terminal.
+Shows [OVPN](https://www.ovpn.com/) [server status](https://status.ovpn.com/) in the terminal.
 
 ![OVPN Server Status](terminal.png "OVPN Server Status")
