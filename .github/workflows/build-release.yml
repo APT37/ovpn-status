@@ -9,7 +9,7 @@ jobs:
   release:
     name: Release for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    environment: kumono
+    environment: default
     strategy:
       matrix:
         name: [linux, windows]
@@ -44,11 +44,12 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ${{ matrix.artifact_name }}
+          draft: false
 
   # publish:
   #   name: Publish crate
   #   runs-on: ubuntu-latest
-  #   environment: catbox
+  #   environment: default
 
   #   steps:
   #     - name: Checkout
