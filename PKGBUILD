@@ -1,6 +1,6 @@
 pkgname=ovpn-status
 pkgver=0.7.1
-pkgrel=3
+pkgrel=4
 pkgdesc='Show OVPN (provider) server status in the terminal'
 arch=('x86_64')
 makedepends=('git' 'cargo' 'clang' 'mold')
