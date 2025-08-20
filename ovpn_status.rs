@@ -50,9 +50,9 @@ impl Cities {
     fn servers(&self) -> Vec<(City, Server)> {
         self.datacenters
             .iter()
-            .flat_map(|city|
+            .flat_map(|city| {
                 city.servers().unwrap_or_else(|_| panic!("get servers for {}", city.slug))
-            )
+            })
             .collect()
     }
 }
