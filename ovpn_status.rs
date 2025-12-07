@@ -8,17 +8,17 @@ static CLIENT: LazyLock<Client> = LazyLock::new(Client::new);
 static WIDTH: OnceLock<usize> = OnceLock::new();
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let cities = Cities::new()?;
+    let datacenters = Datacenters::new()?;
 
-    WIDTH.get_or_init(|| cities.width());
+    WIDTH.get_or_init(|| datacenters.width());
 
-    let mut previous_city = City::default();
+    let mut previous_datacenter = Datacenter::default();
 
-    for (city, server) in cities.servers() {
-        if city != previous_city {
-            print!("{city}");
+    for (datacenter, server) in datacenters.servers() {
+        if datacenter != previous_datacenter {
+            print!("{datacenter}");
 
-            previous_city = city;
+            previous_datacenter = datacenter;
         }
 
         print!("{server}");
@@ -30,40 +30,42 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 #[derive(Deserialize)]
-struct Cities {
-    datacenters: Vec<City>,
+struct Datacenters {
+    datacenters: Vec<Datacenter>,
 }
 
-impl Cities {
+impl Datacenters {
     fn new() -> Result<Self, Box<dyn Error>> {
-        Ok(CLIENT.get("https://www.ovpn.com/v2/api/client/entry").send()?.json::<Cities>()?)
+        Ok(CLIENT.get("https://www.ovpn.com/v2/api/client/entry").send()?.json::<Datacenters>()?)
     }
 
     fn width(&self) -> usize {
         self.datacenters
             .iter()
-            .max_by_key(|city| city.slug.len())
-            .expect("determine longest slug")
+            .max_by_key(|datacenter| datacenter.slug.len())
+            .expect("find longest slug")
             .slug.len()
     }
 
-    fn servers(&self) -> Vec<(City, Server)> {
+    fn servers(&self) -> Vec<(Datacenter, Server)> {
         self.datacenters
             .iter()
-            .flat_map(|city| {
-                city.servers().unwrap_or_else(|_| panic!("get servers for {}", city.slug))
+            .flat_map(|datacenter| {
+                datacenter
+                    .servers()
+                    .unwrap_or_else(|_| panic!("get servers for {}", datacenter.slug))
             })
             .collect()
     }
 }
 
-#[derive(Deserialize, Default, Eq, PartialEq, Clone)]
-struct City {
+#[derive(Deserialize, Default, PartialEq, Clone)]
+struct Datacenter {
     slug: String,
 }
 
-impl City {
-    fn servers(&self) -> Result<Vec<(City, Server)>, Box<dyn Error>> {
+impl Datacenter {
+    fn servers(&self) -> Result<Vec<(Datacenter, Server)>, Box<dyn Error>> {
         Ok(
             CLIENT.get(format!("https://status.ovpn.com/datacenters/{}/servers", self.slug))
                 .send()?
@@ -75,13 +77,13 @@ impl City {
     }
 }
 
-impl fmt::Display for City {
+impl fmt::Display for Datacenter {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let city = self.slug[..1].to_uppercase() + &self.slug[1..];
+        let datacenter = self.slug[..1].to_uppercase() + &self.slug[1..];
 
         let width = WIDTH.get().expect("get width from OnceLock");
 
-        write!(f, "\n{}", format!("{city:<width$} |").green())
+        write!(f, "\n{}", format!("{datacenter:<width$} |").green())
     }
 }
 
