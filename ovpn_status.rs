@@ -1,16 +1,19 @@
 use colored::{ Color::{ Green, Red }, Colorize };
 use reqwest::blocking::Client;
 use serde::Deserialize;
-use std::{ error::Error, fmt, sync::{ LazyLock, OnceLock } };
+use std::{
+    error::Error,
+    fmt::{ self, Display, Formatter },
+    sync::{ LazyLock, atomic::{ AtomicUsize, Ordering::Relaxed } },
+};
 
 static CLIENT: LazyLock<Client> = LazyLock::new(Client::new);
-
-static WIDTH: OnceLock<usize> = OnceLock::new();
+static WIDTH: AtomicUsize = AtomicUsize::new(0);
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let datacenters = Datacenters::new()?;
+    let datacenters = Datacenters::fetch()?;
 
-    WIDTH.get_or_init(|| datacenters.width());
+    WIDTH.store(datacenters.max_width(), Relaxed);
 
     let mut previous_datacenter = Datacenter::default();
 
@@ -35,25 +38,23 @@ struct Datacenters {
 }
 
 impl Datacenters {
-    fn new() -> Result<Self, Box<dyn Error>> {
-        Ok(CLIENT.get("https://www.ovpn.com/v2/api/client/entry").send()?.json::<Datacenters>()?)
+    fn fetch() -> Result<Self, Box<dyn Error>> {
+        Ok(CLIENT.get("https://www.ovpn.com/v2/api/client/entry").send()?.json()?)
     }
 
-    fn width(&self) -> usize {
+    fn max_width(&self) -> usize {
         self.datacenters
             .iter()
-            .max_by_key(|datacenter| datacenter.slug.len())
-            .expect("find longest slug")
-            .slug.len()
+            .map(|datacenter| datacenter.slug.len())
+            .max()
+            .expect("find maximum slug length")
     }
 
     fn servers(&self) -> Vec<(Datacenter, Server)> {
         self.datacenters
             .iter()
-            .flat_map(|datacenter| {
-                datacenter
-                    .servers()
-                    .unwrap_or_else(|_| panic!("get servers for {}", datacenter.slug))
+            .flat_map(|dc| {
+                dc.servers().unwrap_or_else(|_| panic!("get servers from {}", dc.slug))
             })
             .collect()
     }
@@ -77,13 +78,11 @@ impl Datacenter {
     }
 }
 
-impl fmt::Display for Datacenter {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let datacenter = self.slug[..1].to_uppercase() + &self.slug[1..];
+impl Display for Datacenter {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let dc_slug = self.slug[..1].to_uppercase() + &self.slug[1..];
 
-        let width = WIDTH.get().expect("get width from OnceLock");
-
-        write!(f, "\n{}", format!("{datacenter:<width$} |").green())
+        write!(f, "\n{}", format!("{dc_slug:<0$} |", WIDTH.load(Relaxed)).green())
     }
 }
 
@@ -98,8 +97,8 @@ struct Server {
     name: String,
 }
 
-impl fmt::Display for Server {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Display for Server {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, " {}", self.name[3..].color(if self.online { Green } else { Red }))
     }
 }

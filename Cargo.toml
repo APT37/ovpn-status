@@ -1,6 +1,6 @@
 [package]
 name = "ovpn_status"
-version = "0.7.2"
+version = "0.7.3"
 edition = "2024"
 description = "Show OVPN (provider) server status in the terminal"
 #homepage = "https://github.com/APT37/ovpn-status"
